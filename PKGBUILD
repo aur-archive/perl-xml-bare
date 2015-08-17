@@ -1,0 +1,31 @@
+#Maintainer : MrMen <tetcheve at gmail dot com>
+
+pkgname=perl-xml-bare
+_realname=XML-Bare
+pkgver=0.53
+pkgrel=1
+pkgdesc="Perl/CPAN Module XML::Bare"
+arch=('i686' 'x86_64')
+license=('GPL' 'PerlArtistic')
+url="http://search.cpan.org/~codechild/XML-Bare-0.53/Bare.pm"
+depends=('perl')
+options=(!emptydirs)
+source=("http://search.cpan.org/CPAN/authors/id/C/CO/CODECHILD/${_realname}-$pkgver.tar.gz")
+md5sums=('5e9c3dbe4368034fcff392333203339b')
+
+build() {
+  cd $startdir/src/${_realname}-$pkgver
+  # install module in vendor directories.
+  perl Makefile.PL INSTALLDIRS=vendor
+  make
+}
+
+package(){
+  cd $startdir/src/${_realname}-$pkgver
+  make install DESTDIR=${pkgdir} || return 1
+
+  # remove perllocal.pod and .packlist
+  find ${pkgdir} -name perllocal.pod -delete
+  find ${pkgdir} -name .packlist -delete
+}
+
